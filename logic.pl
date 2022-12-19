@@ -215,5 +215,16 @@ distanceFromPerimeter(X, Y, BoardSize, Distance) :-
     Distance is HorizontalDistance.
 
 
+/* legalStonePlacement = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador e verifica se a peça pode ser colocada na posição dita */
+/* TODO testar esta funçao */
 
-    
+legalStonePlacement(GameState, BoardSize, X, Y, Player) :-
+    X2 is X-1,
+    Y2 is Y-1,
+    list_nth(GameState, Y2, Row),
+    list_nth(Row, X2, Elem),
+    Elem =:= " ",
+    howManyFriendsInSight(GameState, BoardSize, Player, X, Y, Friends),
+    distanceFromPerimeter(X, Y, BoardSize, Distance),
+    Distance =:= Friends.
+
