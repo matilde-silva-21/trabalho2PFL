@@ -13,32 +13,26 @@
    8     [" ", " ", " ", " ", " ", " ", " ", " ", " "]
 ]
 
+GameState, BoardSize, Player, X2, Y2, Count, Index, Answer
 
-howManyFriendsInSight(
+howManyFriendsInLeftDiagonal(
     [
         [" ", " ", "x", " ", " ", " ", " ", " ", " "],
         [" ", " ", "o", " ", " ", " ", " ", " ", " "],
-        [" ", " ", "x", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-        [" ", " ", "x", " ", " ", " ", " ", " ", " "],
+        [" ", " ", "x", " ", "!", " ", " ", " ", " "],
+        [" ", " ", " ", " ", " ", "o", " ", " ", " "],
+        [" ", " ", "x", " ", " ", " ", "x", " ", " "],
         [" ", "x", "!", " ", "o", " ", "x", " ", " "],
         [" ", " ", "o", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+        [" ", " ", " ", "x", " ", " ", " ", " ", " "],
         [" ", " ", "o", " ", " ", " ", " ", " ", " "]
-    ], "x", 3, 6, AnswerRow, AnswerColumn).
+    ], 9, "x", 4, 2, Diagonal, Answer).
 
 */
 
 
 
 /* ---- FUNÇÕES AUXILIARES ----- */
-list_size([], 0).
-
-list_size([_ | Tail], Size) :- 
-    list_size(Tail, N),
-    Size is N+1.
-
-
 
 list_nth([H|_], Index, H) :-
     Index = 0.
@@ -55,8 +49,21 @@ joinColumnInOneList([Row | GameState], X2, Aux, List) :-
     append(Aux, [Elem], L1),
     joinColumnInOneList(GameState, X2, L1, List).
 
-joinColumnInOneList([], _, Aux, Aux).
+joinColumnInOneList([], _, List, List).
 
+
+joinDiagonalInOneList(GameState, BoardSize, X2, Y2, Aux, Diagonal) :-
+    X2 < BoardSize,
+    Y2 < BoardSize,
+    list_nth(GameState, Y2, Row),
+    list_nth(Row, X2, Elem),
+    append(Aux, [Elem], L1),
+    X3 is X2+1,
+    Y3 is Y2+1,
+    joinDiagonalInOneList(GameState, BoardSize, X3, Y3, L1, Diagonal).
+
+joinDiagonalInOneList(_, BoardSize, X2, Y2, Diagonal, Diagonal) :-
+    X2 = BoardSize ; Y2 = BoardSize.
 
 /* ----- FUNÇÕES QUE INTEGRAM A LÓGICA DO JOGO ----- */
 
@@ -110,6 +117,19 @@ howManyFriendsInColumn(GameState, Player, X2, Y2, Count, Index, Answer) :-
     joinColumnInOneList(GameState, X2, [], Column),
     howManyFriendsInRow(Column, Player, Y2, Count, Index, Answer).
 
+howManyFriendsInLeftDiagonal(GameState, BoardSize, Player, X2, Y2, Diagonal, Answer):-
+    X2 > Y2,
+    N is X2-Y2,
+    joinDiagonalInOneList(GameState, BoardSize, N, 0, [], Diagonal),
+    howManyFriendsInRow(Diagonal, Player, Y2, 0, 0, Answer) ;
+
+    Y2 > X2,
+    N is Y2-X2,
+    joinDiagonalInOneList(GameState, BoardSize, 0, N, [], Diagonal),
+    howManyFriendsInRow(Diagonal, Player, X2, 0, 0, Answer) ;
+
+    Y2 = X2,
+    joinDiagonalInOneList(GameState, BoardSize, 0, 0, [], Diagonal) .
 
 
 /* X, Y € [1,9] */
