@@ -77,6 +77,27 @@ joinRightDiagonalInOneList(GameState, BoardSize, X2, Y2, Aux, Diagonal) :-
 joinRightDiagonalInOneList(_, BoardSize, X2, Y2, Diagonal, Diagonal) :-
     X2 = BoardSize ; Y2 = -1.
 
+
+getVerticalDistance(Y, BoardSize, VerticalDistance) :-
+    D is div(BoardSize, 2),
+    Y > D,
+    VerticalDistance is BoardSize-Y ;
+
+    D is div(BoardSize, 2),
+    Y =< D,
+    VerticalDistance is Y.
+
+
+getHorizontalDistance(X, BoardSize, HorizontalDistance) :-
+    D is div(BoardSize, 2),
+    X > D,
+    HorizontalDistance is BoardSize-X ;
+
+    D is div(BoardSize, 2),
+    X =< D,
+    HorizontalDistance is X.
+
+
 /* ----- FUNÇÕES QUE INTEGRAM A LÓGICA DO JOGO ----- */
 
 
@@ -178,4 +199,21 @@ howManyFriendsInSight(GameState, BoardSize, Player, X, Y, Answer) :-
     howManyFriendsInLeftDiagonal(GameState, BoardSize, Player, X2, Y2, AnswerLeftDiagonal),
     howManyFriendsInRightDiagonal(GameState, BoardSize, Player, X2, Y2, AnswerRightDiagonal),
     Answer is (AnswerRow + AnswerColumn + AnswerLeftDiagonal + AnswerRightDiagonal).
+
+/* distanceFromPerimeter = calcula a Distance mais curta das coordenadas dadas (X, Y € [1,9]) até ao perímetro do tabuleiro */
+
+distanceFromPerimeter(X, Y, BoardSize, Distance) :-
+    
+    getHorizontalDistance(X, BoardSize, HorizontalDistance),
+    getVerticalDistance(Y, BoardSize, VerticalDistance),
+    VerticalDistance =< HorizontalDistance,
+    Distance is VerticalDistance ;
+
+    getHorizontalDistance(X, BoardSize, HorizontalDistance),
+    getVerticalDistance(Y, BoardSize, VerticalDistance),
+    VerticalDistance > HorizontalDistance,
+    Distance is HorizontalDistance.
+
+
+
     
