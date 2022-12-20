@@ -13,16 +13,17 @@
   8   7     [" ", " ", " ", " ", " ", " ", " ", " ", " "],
   9   8     [" ", " ", " ", " ", " ", " ", " ", " ", " "]]
 
+placeStone(GameState, Player, X, Y, NewGameState, BoardSize)
 
-legalStonePlacement([[" ", " ", "x", " ", " ", " ", " ", " ", " "],
-                     [" ", " ", "o", " ", " ", " ", " ", " ", " "],
-                     [" ", " ", " ", " ", " ", " ", " ", " ", " "],
-                     [" ", " ", " ", " ", " ", "o", " ", " ", " "],
-                     [" ", " ", " ", " ", " ", " ", "x", " ", " "],
-                     [" ", " ", "o", " ", "o", " ", "x", " ", " "],
-                     [" ", " ", "o", " ", " ", " ", " ", " ", " "],
-                     [" ", " ", " ", "x", " ", " ", " ", " ", " "],
-                     ["x", " ", "o", " ", " ", " ", " ", " ", " "]], 9, 6, 6, "x").
+placeStone(         [[' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
+                     [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
+                     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+                     [' ', ' ', ' ', ' ', ' ', 'o', ' ', ' ', ' '],
+                     [' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' '],
+                     [' ', ' ', 'o', ' ', 'o', ' ', 'x', ' ', ' '],
+                     [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
+                     [' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' '],
+                     ['x', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' ']], 'x', 2, 4, New, 9).
 
 */
 
@@ -246,13 +247,23 @@ legalStonePlacement(GameState, BoardSize, X, Y, Player) :-
     distanceFromPerimeter(X, Y, BoardSize, Distance),
     Distance =< Friends.
 
-/*placeStone(GameState, Player, X, Y, NewGameState, BoardSize) :-
+
+/* placeStone = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador. Primeiro, verifica se a o local de jogada é válido, se for, unifica NewGameState com o tabuleiro atualizado (com a peça nas coordenadas pretendidas) */
+
+placeStone(GameState, Player, X, Y, NewGameState, BoardSize) :-
+    legalStonePlacement(GameState, BoardSize, X, Y, Player), !,
     X2 is X-1,
     Y2 is Y-1,
     L is BoardSize-X,
+    K is BoardSize-Y,
     list_nth(GameState, Y2, Row),
-    list_slice(Row, 0, X2, Part1),
-    list_slice(Row, X, L, Part2),
-    append(Part1, [Player], L1),
-    append(L1, Part2, NewGameState).
-*/
+    list_slice(Row, 0, X2, Part1), !,
+    list_slice(Row, X, L, Part2), !,
+    append(Part1, [Player], L1), !,
+    append(L1, Part2, NewRow), !,
+    list_slice(GameState, 0, Y2, Part3), !,
+    list_slice(GameState, Y, K, Part4), !,
+    append(Part3, [NewRow], L2), !,
+    append(L2, Part4, NewGameState), !.
+
+
