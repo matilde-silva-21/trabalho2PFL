@@ -13,20 +13,18 @@
   8   7     [" ", " ", " ", " ", " ", " ", " ", " ", " "],
   9   8     [" ", " ", " ", " ", " ", " ", " ", " ", " "]]
 
-placeStone(GameState, Player, X, Y, NewGameState, BoardSize)
 
-move(GameState, Move, NewGameState)
-[Player, X, Y] 
-
-move(               [[' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
-                     [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
-                     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-                     [' ', ' ', ' ', ' ', ' ', 'o', ' ', ' ', ' '],
-                     [' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' '],
-                     [' ', ' ', 'o', ' ', 'o', ' ', 'x', ' ', ' '],
-                     [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
-                     [' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' '],
-                     ['x', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' ']], ['x', 2, 8], New).
+display_game(
+[
+[' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
+[' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
+[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+[' ', ' ', ' ', ' ', ' ', 'o', ' ', ' ', ' '],
+[' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' '],
+[' ', ' ', 'o', ' ', 'o', ' ', 'x', ' ', ' '],
+[' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
+[' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' '],
+['x', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' ']]).
 
 */
 
@@ -137,7 +135,8 @@ howManyFriendsInRow([ Piece | Row ], Player, X2, Count, Index, Answer) :-
 
     X2 > Index,
     Piece \= Player,
-    (Piece \= " " ; Piece \= ' '),
+    Piece \= " ",
+    Piece \= ' ',
     NewIndex is Index+1,
     howManyFriendsInRow(Row, Player, X2, 0, NewIndex, Answer) ;
 
@@ -163,7 +162,8 @@ howManyFriendsInRow([ Piece | Row ], Player, X2, Count, Index, Answer) :-
 
     X2 < Index,
     Piece \= Player,
-    (Piece \= " " ; Piece \= ' '),
+    Piece \= " ",
+    Piece \= ' ',
     NewIndex is Index+1,
     howManyFriendsInRow([], Player, X2, Count, NewIndex, Answer) .
 
