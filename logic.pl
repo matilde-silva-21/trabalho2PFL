@@ -1,5 +1,5 @@
 /*
-
+              A    B    C    D    E    F    G    H    I
         (X)   1    2    3    4    5    6    7    8    9
         (X2)  0    1    2    3    4    5    6    7    8
  (Y) (Y2)
@@ -14,19 +14,15 @@
   9   8     [" ", " ", " ", " ", " ", " ", " ", " ", " "]]
 
 
-
-howManyFriendsInSight(
-    [
-        [" ", " ", "x", " ", " ", " ", " ", " ", " "],
-        [" ", " ", "o", " ", " ", " ", " ", " ", " "],
-        [" ", " ", "x", " ", "!", " ", " ", " ", " "],
-        [" ", " ", " ", " ", " ", "o", " ", " ", " "],
-        [" ", " ", "x", " ", " ", " ", "x", " ", " "],
-        [" ", "x", "!", " ", "o", " ", "x", " ", " "],
-        [" ", " ", "o", " ", " ", " ", " ", " ", " "],
-        [" ", " ", " ", "x", " ", " ", " ", " ", " "],
-        ["x", " ", "o", " ", " ", " ", " ", " ", " "]
-    ], 9, "x", 5, 7, Answer).
+legalStonePlacement([[" ", " ", "x", " ", " ", " ", " ", " ", " "],
+                     [" ", " ", "o", " ", " ", " ", " ", " ", " "],
+                     [" ", " ", " ", " ", " ", " ", " ", " ", " "],
+                     [" ", " ", " ", " ", " ", "o", " ", " ", " "],
+                     [" ", " ", " ", " ", " ", " ", "x", " ", " "],
+                     [" ", " ", "o", " ", "o", " ", "x", " ", " "],
+                     [" ", " ", "o", " ", " ", " ", " ", " ", " "],
+                     [" ", " ", " ", "x", " ", " ", " ", " ", " "],
+                     ["x", " ", "o", " ", " ", " ", " ", " ", " "]], 9, 6, 6, "x").
 
 */
 
@@ -42,6 +38,29 @@ list_nth([_|L1], Index, Elem) :-
     NewIndex is Index-1,
     list_nth(L1, NewIndex, Elem).
 
+
+list_size([], 0).
+
+list_size([_ | Tail], Size) :- 
+    list_size(Tail, N),
+    Size is N+1.
+
+
+list_slice(L1, Index, Size, L2) :-
+    list_slice_helper(L1, Index, Size, L2, []).
+
+list_slice_helper(_, 0, 0, L2, L2).
+
+list_slice_helper([H|L1], Index, Size, L2, L3) :-
+    Index \= 0,
+    Size \= 0,
+    New is Index-1,
+    list_slice_helper(L1, New, Size, L2, []) ;
+    Index = 0,
+    Size \= 0,
+    New is Size-1,
+    append(L3, [H], L4),
+    list_slice_helper(L1, Index, New, L2, L4).
 
 
 joinColumnInOneList([Row | GameState], X2, Aux, List) :-
@@ -114,12 +133,12 @@ howManyFriendsInRow([ Piece | Row ], Player, X2, Count, Index, Answer) :-
 
     X2 > Index,
     Piece \= Player,
-    Piece \= " ",
+    (Piece \= " " ; Piece \= ' '),
     NewIndex is Index+1,
     howManyFriendsInRow(Row, Player, X2, 0, NewIndex, Answer) ;
 
     X2 > Index,
-    Piece = " ",
+    (Piece = " " ; Piece = ' '),
     NewIndex is Index+1,
     howManyFriendsInRow(Row, Player, X2, Count, NewIndex, Answer) ;
 
@@ -128,7 +147,7 @@ howManyFriendsInRow([ Piece | Row ], Player, X2, Count, Index, Answer) :-
     howManyFriendsInRow(Row, Player, X2, Count, NewIndex, Answer) ;
 
     X2 < Index,
-    Piece = " ",
+    (Piece = " " ; Piece = ' '),
     NewIndex is Index+1,
     howManyFriendsInRow(Row, Player, X2, Count, NewIndex, Answer) ;
 
@@ -140,7 +159,7 @@ howManyFriendsInRow([ Piece | Row ], Player, X2, Count, Index, Answer) :-
 
     X2 < Index,
     Piece \= Player,
-    Piece \= " ",
+    (Piece \= " " ; Piece \= ' '),
     NewIndex is Index+1,
     howManyFriendsInRow([], Player, X2, Count, NewIndex, Answer) .
 
@@ -207,24 +226,33 @@ distanceFromPerimeter(X, Y, BoardSize, Distance) :-
     getHorizontalDistance(X, BoardSize, HorizontalDistance),
     getVerticalDistance(Y, BoardSize, VerticalDistance),
     VerticalDistance =< HorizontalDistance,
-    Distance is VerticalDistance ;
+    Distance is VerticalDistance-1 ;
 
     getHorizontalDistance(X, BoardSize, HorizontalDistance),
     getVerticalDistance(Y, BoardSize, VerticalDistance),
     VerticalDistance > HorizontalDistance,
-    Distance is HorizontalDistance.
+    Distance is HorizontalDistance-1.
 
 
 /* legalStonePlacement = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador e verifica se a peça pode ser colocada na posição dita */
-/* TODO testar esta funçao */
 
 legalStonePlacement(GameState, BoardSize, X, Y, Player) :-
     X2 is X-1,
     Y2 is Y-1,
     list_nth(GameState, Y2, Row),
     list_nth(Row, X2, Elem),
-    Elem =:= " ",
+    (Elem = ' ' ; Elem = " "),
     howManyFriendsInSight(GameState, BoardSize, Player, X, Y, Friends),
     distanceFromPerimeter(X, Y, BoardSize, Distance),
-    Distance =:= Friends.
+    Distance =< Friends.
 
+/*placeStone(GameState, Player, X, Y, NewGameState, BoardSize) :-
+    X2 is X-1,
+    Y2 is Y-1,
+    L is BoardSize-X,
+    list_nth(GameState, Y2, Row),
+    list_slice(Row, 0, X2, Part1),
+    list_slice(Row, X, L, Part2),
+    append(Part1, [Player], L1),
+    append(L1, Part2, NewGameState).
+*/
