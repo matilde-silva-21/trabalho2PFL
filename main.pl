@@ -26,4 +26,23 @@ initial_state(Size, GameState) :-
     display_game(GameState), !.
 
 
+/* TODO
+
+valid_moves(+GameState, +Player, -ListOfMoves).
+
+game_over(+GameState, -Winner).
+
+value(+GameState, +Player, -Value).
+
+-- computador --
+
+value(+GameState, +Player, -Value).
+
+O nível 1 deverá devolver uma jogada válida aleatória. O nível 2 deverá
+devolver a melhor jogada no momento (algoritmo greedy), tendo em conta a avaliação
+do estado de jogo. 
+
+*/
+
+
 
