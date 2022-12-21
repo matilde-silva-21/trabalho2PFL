@@ -41,12 +41,15 @@ list_nth([_|L1], Index, Elem) :-
     list_nth(L1, NewIndex, Elem).
 
 
+/* -------- */
+
 list_size([], 0).
 
 list_size([_ | Tail], Size) :- 
     list_size(Tail, N),
     Size is N+1.
 
+/* -------- */
 
 list_slice(L1, Index, Size, L2) :-
     list_slice_helper(L1, Index, Size, L2, []).
@@ -64,6 +67,20 @@ list_slice_helper([H|L1], Index, Size, L2, L3) :-
     append(L3, [H], L4),
     list_slice_helper(L1, Index, New, L2, L4).
 
+/* -------- */
+
+replicate(Amount, Elem, L1) :- replicate_helper(Amount, Elem, [], L1).
+
+replicate_helper(0, _, L1, L1).
+replicate_helper(Amount, Elem, L1, L2) :-
+    N is Amount-1,
+    replicate_helper(N, Elem, [Elem|L1], L2).
+
+/* -------- */
+
+divisible(X,Y) :- 0 is X mod Y, !.
+
+/* -------- */
 
 joinColumnInOneList([Row | GameState], X2, Aux, List) :-
     list_nth(Row, X2, Elem),
@@ -72,8 +89,10 @@ joinColumnInOneList([Row | GameState], X2, Aux, List) :-
 
 joinColumnInOneList([], _, List, List).
 
+/* -------- */
 
-joinLeftDiagonalInOneList(GameState, BoardSize, X2, Y2, Aux, Diagonal) :-
+joinLeftDiagonalInOneList(GameState, X2, Y2, Aux, Diagonal) :-
+    boardSize(BoardSize),
     X2 < BoardSize,
     Y2 < BoardSize,
     list_nth(GameState, Y2, Row),
@@ -81,39 +100,48 @@ joinLeftDiagonalInOneList(GameState, BoardSize, X2, Y2, Aux, Diagonal) :-
     append(Aux, [Elem], L1),
     X3 is X2+1,
     Y3 is Y2+1,
-    joinLeftDiagonalInOneList(GameState, BoardSize, X3, Y3, L1, Diagonal), !.
+    joinLeftDiagonalInOneList(GameState, X3, Y3, L1, Diagonal), !.
 
-joinLeftDiagonalInOneList(_, BoardSize, X2, Y2, Diagonal, Diagonal) :-
+joinLeftDiagonalInOneList(_, X2, Y2, Diagonal, Diagonal) :-
+    boardSize(BoardSize),
     X2 = BoardSize ; Y2 = BoardSize.
 
+/* -------- */
 
-joinRightDiagonalInOneList(GameState, BoardSize, X2, Y2, Aux, Diagonal) :-
+joinRightDiagonalInOneList(GameState, X2, Y2, Aux, Diagonal) :-
     list_nth(GameState, Y2, Row),
     list_nth(Row, X2, Elem),
     append(Aux, [Elem], L1),
     X3 is X2+1,
     Y3 is Y2-1,
-    joinRightDiagonalInOneList(GameState, BoardSize, X3, Y3, L1, Diagonal), !.
+    joinRightDiagonalInOneList(GameState, X3, Y3, L1, Diagonal), !.
 
-joinRightDiagonalInOneList(_, BoardSize, X2, Y2, Diagonal, Diagonal) :-
+joinRightDiagonalInOneList(_, X2, Y2, Diagonal, Diagonal) :-
+    boardSize(BoardSize),
     X2 = BoardSize ; Y2 = -1.
 
+/* -------- */
 
-getVerticalDistance(Y, BoardSize, VerticalDistance) :-
+getVerticalDistance(Y, VerticalDistance) :-
+    boardSize(BoardSize),
     D is div(BoardSize, 2),
     Y > D,
     VerticalDistance is BoardSize-Y ;
 
+    boardSize(BoardSize),
     D is div(BoardSize, 2),
     Y =< D,
     VerticalDistance is Y.
 
+/* -------- */
 
-getHorizontalDistance(X, BoardSize, HorizontalDistance) :-
+getHorizontalDistance(X, HorizontalDistance) :-
+    boardSize(BoardSize),
     D is div(BoardSize, 2),
     X > D,
     HorizontalDistance is BoardSize-X ;
 
+    boardSize(BoardSize),
     D is div(BoardSize, 2),
     X =< D,
     HorizontalDistance is X.
@@ -176,85 +204,88 @@ howManyFriendsInColumn(GameState, Player, X2, Y2, Count, Index, Answer) :-
 
 /* -- howManyFriendsInLeftDiagonal = recebe o GameState (Lista de Listas) e coordenadas de uma posição (X2, Y2 € [0,8]), e transforma a diagonal esquerda num único array, depois chama howManyFriendsInRow e determina quantos amigos (0, 1 ou 2) estão à vista nessa Diagonal -- */
 
-howManyFriendsInLeftDiagonal(GameState, BoardSize, Player, X2, Y2, Answer):-
+howManyFriendsInLeftDiagonal(GameState, Player, X2, Y2, Answer):-
     X2 > Y2,
     N is X2-Y2,
-    joinLeftDiagonalInOneList(GameState, BoardSize, N, 0, [], Diagonal),
+    joinLeftDiagonalInOneList(GameState, N, 0, [], Diagonal),
     howManyFriendsInRow(Diagonal, Player, Y2, 0, 0, Answer) ;
 
     Y2 > X2,
     N is Y2-X2,
-    joinLeftDiagonalInOneList(GameState, BoardSize, 0, N, [], Diagonal),
+    joinLeftDiagonalInOneList(GameState, 0, N, [], Diagonal),
     howManyFriendsInRow(Diagonal, Player, X2, 0, 0, Answer) ;
 
     Y2 = X2,
-    joinLeftDiagonalInOneList(GameState, BoardSize, 0, 0, [], Diagonal),
+    joinLeftDiagonalInOneList(GameState, 0, 0, [], Diagonal),
     howManyFriendsInRow(Diagonal, Player, X2, 0, 0, Answer).
 
 
 /* -- howManyFriendsInRightDiagonal = recebe o GameState (Lista de Listas) e coordenadas de uma posição (X2, Y2 € [0,8]), e transforma a diagonal direita num único array, depois chama howManyFriendsInRow e determina quantos amigos (0, 1 ou 2) estão à vista nessa Diagonal -- */
 
-howManyFriendsInRightDiagonal(GameState, BoardSize, Player, X2, Y2, Answer):-
+howManyFriendsInRightDiagonal(GameState, Player, X2, Y2, Answer):-
+    boardSize(BoardSize),
     N is X2+Y2,
     P is BoardSize-1,
     N =< P,
-    joinRightDiagonalInOneList(GameState, BoardSize, 0, N, [], Diagonal),
+    joinRightDiagonalInOneList(GameState, 0, N, [], Diagonal),
     howManyFriendsInRow(Diagonal, Player, X2, 0, 0, Answer) ;
 
+    boardSize(BoardSize),
     N is X2+Y2,
     P is BoardSize-1,
     N > P,
     K is N-BoardSize+1,
     J is X2-K,
-    joinRightDiagonalInOneList(GameState, BoardSize, K, P, [], Diagonal),
+    joinRightDiagonalInOneList(GameState, K, P, [], Diagonal),
     howManyFriendsInRow(Diagonal, Player, J, 0, 0, Answer) .
 
 
 
 /* howManyFriendsInSight = recebe o GameState e coordenadas de posição (X, Y € [1,9]) e calcula quantos amigos estão à vista */
 
-howManyFriendsInSight(GameState, BoardSize, Player, X, Y, Answer) :-
+howManyFriendsInSight(GameState, Player, X, Y, Answer) :-
     Y2 is Y-1,
     list_nth(GameState, Y2, Row),
     X2 is X-1,
     howManyFriendsInRow(Row, Player, X2, 0, 0, AnswerRow),
     howManyFriendsInColumn(GameState, Player, X2, Y2, 0, 0, AnswerColumn),
-    howManyFriendsInLeftDiagonal(GameState, BoardSize, Player, X2, Y2, AnswerLeftDiagonal),
-    howManyFriendsInRightDiagonal(GameState, BoardSize, Player, X2, Y2, AnswerRightDiagonal),
+    howManyFriendsInLeftDiagonal(GameState, Player, X2, Y2, AnswerLeftDiagonal),
+    howManyFriendsInRightDiagonal(GameState, Player, X2, Y2, AnswerRightDiagonal),
     Answer is (AnswerRow + AnswerColumn + AnswerLeftDiagonal + AnswerRightDiagonal).
 
 /* distanceFromPerimeter = calcula a Distance mais curta das coordenadas dadas (X, Y € [1,9]) até ao perímetro do tabuleiro */
 
-distanceFromPerimeter(X, Y, BoardSize, Distance) :-
+distanceFromPerimeter(X, Y, Distance) :-
     
-    getHorizontalDistance(X, BoardSize, HorizontalDistance),
-    getVerticalDistance(Y, BoardSize, VerticalDistance),
+    getHorizontalDistance(X, HorizontalDistance),
+    getVerticalDistance(Y, VerticalDistance),
     VerticalDistance =< HorizontalDistance,
     Distance is VerticalDistance-1 ;
 
-    getHorizontalDistance(X, BoardSize, HorizontalDistance),
-    getVerticalDistance(Y, BoardSize, VerticalDistance),
+    getHorizontalDistance(X, HorizontalDistance),
+    getVerticalDistance(Y, VerticalDistance),
     VerticalDistance > HorizontalDistance,
     Distance is HorizontalDistance-1.
 
 
 /* legalStonePlacement = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador e verifica se a peça pode ser colocada na posição dita */
 
-legalStonePlacement(GameState, BoardSize, X, Y, Player) :-
+legalStonePlacement(GameState, X, Y, Player) :-
     X2 is X-1,
     Y2 is Y-1,
     list_nth(GameState, Y2, Row),
     list_nth(Row, X2, Elem),
     (Elem = ' ' ; Elem = " "),
-    howManyFriendsInSight(GameState, BoardSize, Player, X, Y, Friends),
-    distanceFromPerimeter(X, Y, BoardSize, Distance),
+    howManyFriendsInSight(GameState, Player, X, Y, Friends),
+    distanceFromPerimeter(X, Y, Distance),
     Distance =< Friends.
 
 
 /* placeStone = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador. Primeiro, verifica se a o local de jogada é válido, se for, unifica NewGameState com o tabuleiro atualizado (com a peça nas coordenadas pretendidas) */
 
 placeStone(GameState, Player, X, Y, NewGameState, BoardSize) :-
-    legalStonePlacement(GameState, BoardSize, X, Y, Player), !,
+    legalStonePlacement(GameState, X, Y, Player), !,
+    boardSize(BoardSize),
     X2 is X-1,
     Y2 is Y-1,
     L is BoardSize-X,
