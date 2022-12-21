@@ -52,6 +52,34 @@ game_over(GameState, Winner) :-
     Winner \= " ".
 
 
+/* Turn = 'x' ou 'o' */
+personVsPerson(GameState, Turn) :-
+    (Turn = 'o' ; Turn = "o"),
+    \+ game_over(GameState, Winner),
+    display_game(GameState),
+    getMoveInput(Move, Turn),   /* "Player 2 it is your turn! What column (X axis) do you want to place the piece (1..BoardSize)? --input-- What row (Y axis) do you want to place the piece (1..BoardSize)? --input-- */
+    verifyMove(Move), /* incluir a parte da verificaçao no getMoveInput? */
+    move(GameState, Move, NewGameState),
+    personVsPerson(NewGameState, 'x') ; 
+    
+    
+    (Turn = 'x' ; Turn = "x"),
+    \+ game_over(GameState, W),
+    display_game(GameState),
+    getMoveInput(Move, Turn),
+    verifyMove(),
+    move(GameState, Move, NewGameState),
+    personVsPerson(NewGameState, 'o') ;
+
+    game_over(GameState, Winner),
+    (Winner = 'x' ; Winner = "x"),
+    write('Congratulations, Player 1, you won!') ;
+
+    game_over(GameState, Winner),
+    (Winner = 'o' ; Winner = "o"),
+    write('Congratulations, Player 2, you won!').
+
+
 
 /* TODO
 
@@ -64,7 +92,7 @@ choose_move(+GameState, +Player, +Level, -Move).
 
 O nível 1 deverá devolver uma jogada válida aleatória. O nível 2 deverá
 devolver a melhor jogada no momento (algoritmo greedy), tendo em conta a avaliação
-do estado de jogo. 
+do estado de jogo.
 
 */
 
