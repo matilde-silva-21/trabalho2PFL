@@ -43,9 +43,18 @@ play:-
 
 
 
+game_over(GameState, Winner) :-
+    boardSize(BoardSize),
+    D is div(BoardSize, 2),
+    list_nth(GameState, D, Row),
+    list_nth(Row, D, Winner),
+    Winner \= ' ',
+    Winner \= " ".
+
+
+
 /* TODO
 
-game_over(+GameState, -Winner).
 
 value(+GameState, +Player, -Value).
 
