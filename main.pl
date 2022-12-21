@@ -1,5 +1,6 @@
 :-[logic].
 :-[board].
+:-[menu].
 
 /* Move = [Player, X, Y] */
 move(GameState, Move, NewGameState) :-
@@ -26,37 +27,10 @@ initial_state(Size, GameState) :-
     display_game(GameState), !.
 
 
-/* TODO
+valid_moves(GameState, Player, ListOfMoves) :-
+    getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves).
 
-valid_moves(+GameState, +Player, -ListOfMoves).
 
-game_over(+GameState, -Winner).
-
-value(+GameState, +Player, -Value).
-
--- computador --
-
-value(+GameState, +Player, -Value).
-
-O nível 1 deverá devolver uma jogada válida aleatória. O nível 2 deverá
-devolver a melhor jogada no momento (algoritmo greedy), tendo em conta a avaliação
-do estado de jogo. 
-
-*/
-
-% Game Main Menu
-
-menuChoice(1):-
-    write('good choice :) pvp').
-menuChoice(2):-
-    write('ok chice ig... pvc').
-menuChoice(3):-
-    write('you dont wanna play? cvc').
-menuChoice(0):-
-    write('byee').
-menuChoice(_):-
-    write('\nInvalid choice. \nPlease choose a valid option.\n'),
-    play.
 
 play:-
     write('\n\n----Center Game---\n\n'),
@@ -66,4 +40,22 @@ play:-
     write('0. Leave Game\n'),
     read(Choice),
     menuChoice(Choice).
+
+
+
+/* TODO
+
+game_over(+GameState, -Winner).
+
+value(+GameState, +Player, -Value).
+
+-- computador --
+
+choose_move(+GameState, +Player, +Level, -Move).
+
+O nível 1 deverá devolver uma jogada válida aleatória. O nível 2 deverá
+devolver a melhor jogada no momento (algoritmo greedy), tendo em conta a avaliação
+do estado de jogo. 
+
+*/
 

@@ -14,17 +14,23 @@
   9   8     [" ", " ", " ", " ", " ", " ", " ", " ", " "]]
 
 
-display_game(
-[
-[' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
-[' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
-[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-[' ', ' ', ' ', ' ', ' ', 'o', ' ', ' ', ' '],
-[' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' '],
-[' ', ' ', 'o', ' ', 'o', ' ', 'x', ' ', ' '],
-[' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
-[' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' '],
-['x', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' ']]).
+getListOfMoves(GameState, Player, X, Y, Aux, ListOfMoves) :-
+
+
+[[' ', ' ', ' '],[' ', ' ', ' '],[' ', ' ', ' ']]
+
+getListOfMoves([
+    [' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', 'o', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' '],
+    [' ', ' ', 'o', ' ', 'o', ' ', 'x', ' ', ' '],
+    [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' '],
+    ['x', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' ']], 'x', 1, 1, [], ListOfMoves).
+
+getListOfMoves([[' ', ' ', ' '],[' ', ' ', ' '],[' ', ' ', ' ']], 'x', 1,1,[],L).
 
 */
 
@@ -131,7 +137,7 @@ getVerticalDistance(Y, VerticalDistance) :-
     boardSize(BoardSize),
     D is div(BoardSize, 2),
     Y =< D,
-    VerticalDistance is Y.
+    VerticalDistance is Y-1.
 
 /* -------- */
 
@@ -144,7 +150,7 @@ getHorizontalDistance(X, HorizontalDistance) :-
     boardSize(BoardSize),
     D is div(BoardSize, 2),
     X =< D,
-    HorizontalDistance is X.
+    HorizontalDistance is X-1.
 
 
 /* ----- FUNÇÕES QUE INTEGRAM A LÓGICA DO JOGO ----- */
@@ -260,12 +266,12 @@ distanceFromPerimeter(X, Y, Distance) :-
     getHorizontalDistance(X, HorizontalDistance),
     getVerticalDistance(Y, VerticalDistance),
     VerticalDistance =< HorizontalDistance,
-    Distance is VerticalDistance-1 ;
+    Distance is VerticalDistance ;
 
     getHorizontalDistance(X, HorizontalDistance),
     getVerticalDistance(Y, VerticalDistance),
     VerticalDistance > HorizontalDistance,
-    Distance is HorizontalDistance-1.
+    Distance is HorizontalDistance.
 
 
 /* legalStonePlacement = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador e verifica se a peça pode ser colocada na posição dita */
@@ -301,3 +307,53 @@ placeStone(GameState, Player, X, Y, NewGameState, BoardSize) :-
     append(L2, Part4, NewGameState), !.
 
 
+/* getListOfMoves = recebe o GameState e jogador. Passa por todas as células do jogo e verifica se é uma coordenada válida para inserir uma nova peça (usa legalStonePlacement para a verificação). Junta todos os Moves em ListOfMoves (um Move tem a estrutura [Player, X, Y])*/
+
+getListOfMoves(GameState, Player, X, Y, Aux, ListOfMoves) :-
+    
+    boardSize(BoardSize),
+    X = BoardSize,
+    Y =< BoardSize,
+    A is 1,
+    B is Y+1,
+    legalStonePlacement(GameState, X, Y, Player),
+    append([], [Player], L1),
+    append(L1, [X], L2),
+    append(L2, [Y], Move),
+    append(Aux, [Move], L3),
+    getListOfMoves(GameState, Player, A, B, L3, ListOfMoves) ;
+
+    boardSize(BoardSize),
+    Y =< BoardSize,
+    X \= BoardSize,
+    A is X+1,
+    B is Y,
+    legalStonePlacement(GameState, X, Y, Player), !,
+    append([], [Player], L1),
+    append(L1, [X], L2),
+    append(L2, [Y], Move),
+    append(Aux, [Move], L3),
+    getListOfMoves(GameState, Player, A, B, L3, ListOfMoves), ! ;
+    
+    
+    boardSize(BoardSize),
+    Y =< BoardSize,
+    X \= BoardSize,
+    A is X+1,
+    B is Y,
+    \+ legalStonePlacement(GameState, X, Y, Player), !,
+    getListOfMoves(GameState, Player, A, B, Aux, ListOfMoves), ! ;
+
+    boardSize(BoardSize),
+    Y =< BoardSize,
+    X = BoardSize,
+    A is 1,
+    B is Y+1,
+    \+ legalStonePlacement(GameState, X, Y, Player), !,
+    getListOfMoves(GameState, Player, A, B, Aux, ListOfMoves), ! .
+
+getListOfMoves(_, _, X, Y, Aux, Aux) :-
+    boardSize(BoardSize),
+    K is BoardSize+1,
+    X = 1,
+    Y = K.
