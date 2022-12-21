@@ -44,5 +44,26 @@ do estado de jogo.
 
 */
 
+% Game Main Menu
 
+menuChoice(1):-
+    write('good choice :) pvp').
+menuChoice(2):-
+    write('ok chice ig... pvc').
+menuChoice(3):-
+    write('you dont wanna play? cvc').
+menuChoice(0):-
+    write('byee').
+menuChoice(_):-
+    write('\nInvalid choice. \nPlease choose a valid option.\n'),
+    play.
+
+play:-
+    write('\n\n----Center Game---\n\n'),
+    write('1. Player vs Player\n'),
+    write('2. Player vs Computer\n'),
+    write('3. Computer vs Computer\n'),
+    write('0. Leave Game\n'),
+    read(Choice),
+    menuChoice(Choice).
 
