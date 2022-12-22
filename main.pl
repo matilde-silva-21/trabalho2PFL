@@ -79,6 +79,14 @@ personVsPerson(GameState, Turn) :-
 
 initial_state(9, G), personVsPerson(G, 1).
 
+(5,1) | (1,3)
+(5,8) | (9,3)
+(5,3) | (5,7)
+(8,8) | (7,5)
+(2,8) | (7,7)
+(7,3) | (3,5)
+(3,3) | (5,5)
+
 value(+GameState, +Player, -Value).
 
 -- computador --

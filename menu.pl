@@ -18,10 +18,10 @@ sanitizeInput(Column, Row, Place) :-
     boardSize(BoardSize),
 (   (
         number(Column),
-        format('What row (Y axis) do you want to place the piece (1..~w)? ', [BoardSize])
+        format('What row (Y axis) do you want to place the piece (1..~w)? Don\'t forget the dot at the end: ', [BoardSize])
     );
     (   number(Row),
-        format('What column (X axis) do you want to place the piece (1..~w)? ', [BoardSize])
+        format('What column (X axis) do you want to place the piece (1..~w)? Don\'t forget the dot at the end: ', [BoardSize])
     )
 ),
     read(Choice),
