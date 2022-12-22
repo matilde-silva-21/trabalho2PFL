@@ -67,11 +67,11 @@ personVsPerson(GameState, Turn) :-
 
     game_over(GameState, Winner),
     (Winner = 'x' ; Winner = "x"),
-    write('Congratulations, Player 1, you won!') ;
+    nl, write('Congratulations, Player 1, you won!') ;
 
     game_over(GameState, Winner),
     (Winner = 'o' ; Winner = "o"),
-    write('Congratulations, Player 2, you won!').
+    nl, write('Congratulations, Player 2, you won!').
 
 
 
