@@ -1,6 +1,7 @@
 :-[logic].
 :-[board].
 :-[menu].
+:-use_module(library(random)).
 
 /* Move = [Player, X, Y] */
 move(GameState, Move, NewGameState) :-
@@ -83,6 +84,15 @@ personVsPerson(GameState, Turn) :-
     display_game(GameState),
     (Winner = 'o' ; Winner = "o"),
     nl, write('Congratulations, Player 2, you won!').
+
+
+choose_move(GameState, Player, Level, Move) :-
+    Level = 1,
+    getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves),
+    length(ListOfMoves, Size),
+    random(0,Size,Random),
+    list_nth(ListOfMoves, Random, Move).
+
 
 
 
