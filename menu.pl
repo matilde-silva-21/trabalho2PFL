@@ -13,7 +13,8 @@ menuChoice(_):-
     play.
 
 
-/* se quiser a Row, Column = 0, se quiser Column, Row = 0 */
+/* sanitizeInput = função que recebe a Row e Column do jogador e verifica se foram inseridos números e se esses números estão dentro dos limites do tabuleiro. Se quiser a Row, Column = 0, se quiser Column, Row = 0 */
+
 sanitizeInput(Column, Row, Place) :-
     boardSize(BoardSize),
 (   (
@@ -51,6 +52,8 @@ sanitizeInput(Column, Row, Place) :-
 ).
 
 
+/* getMoveInput = chama sanitizeInput e depois cria o array Move */
+
 getMoveInput(Move, Turn) :-
 
     nl, format('Player ~w it is your turn!', [Turn]), nl,
@@ -71,6 +74,7 @@ getMoveInput(Move, Turn) :-
     )
 ).
 
+/* getLegalMove = chama o getMoveInput, que garante que o input está sanitizado, e depois verifica se a jogada inserida, além de válida, é legal */
 
 getLegalMove(GameState, NewGameState, Turn) :-
     getMoveInput(Move, Turn),

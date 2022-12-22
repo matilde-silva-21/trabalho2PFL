@@ -27,32 +27,41 @@ writeCharNTimes(N, Char):-
     writeCharNTimes(New, Char) ;
     N = 0.
 
+/*--- writeColumnNumbers = função que escreve o numero das colunas em cima do tabuleiro ---*/
+
+writeColumnNumbers(N):-
+    boardSize(BoardSize),
+    N =< BoardSize,
+    format('  ~w ', [N]),
+    New is N+1,
+    writeColumnNumbers(New) ;
+    N = BoardSize.
 
 /*--- drawRow = recebe o array que representa uma row e escreve no terminal com o formato desejado ---*/
 
-drawRow([Elem|Row]) :-
+drawRow([Elem|Row], Count) :-
 
     Elem \= ' ',
     Elem \= " ",
     format('|_~w_', [Elem]),
-    drawRow(Row) ;
+    drawRow(Row, Count) ;
 
     write('|___'),
-    drawRow(Row).
+    drawRow(Row, Count).
 
-drawRow([]) :-
-    write('|'), nl.
-
+drawRow([], Count) :-
+    format('|  ~w', [Count]),nl.
 
 
 
 /*--- drawBoard = recebe o GameState e chama drawRow para todas as Rows ---*/
 
-drawBoard([Row|GameState]) :-
-    drawRow(Row),
-    drawBoard(GameState).
+drawBoard([Row|GameState], Count) :-
+    drawRow(Row, Count),
+    NewCount is Count+1,
+    drawBoard(GameState, NewCount).
 
-drawBoard([]).
+drawBoard([], _).
 
 /*--- drawBoard = recebe o tamanho do tabuleiro e povoa GameState ---*/
 

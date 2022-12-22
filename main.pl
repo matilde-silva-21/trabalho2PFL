@@ -13,9 +13,10 @@ move(GameState, Move, NewGameState) :-
 display_game(GameState) :-
     boardSize(BoardSize),
     Size is 3*BoardSize+BoardSize-1,
+    nl, writeColumnNumbers(1), nl,
     write(' '),
     writeCharNTimes(Size, '_'), nl,
-    drawBoard(GameState), !.
+    drawBoard(GameState, 1), !.
 
 
 initial_state(Size, GameState) :-
