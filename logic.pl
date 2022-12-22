@@ -48,6 +48,16 @@ list_size([_ | Tail], Size) :-
 
 /* -------- */
 
+replace([H|L1], Index, Old, New, [H|L2]) :-
+    Index\=0,
+    Ind is Index-1,
+    replace(L1, Ind, Old, New, L2).
+
+replace([Old|L1], Index, Old, New, [New|L1]) :-
+    Index = 0.
+
+/* -------- */
+
 list_slice(L1, Index, Size, L2) :-
     list_slice_helper(L1, Index, Size, L2, []).
 
@@ -280,23 +290,13 @@ legalStonePlacement(GameState, X, Y, Player) :-
 
 /* placeStone = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador. Primeiro, verifica se a o local de jogada é válido, se for, unifica NewGameState com o tabuleiro atualizado (com a peça nas coordenadas pretendidas) */
 
-/* TODO isto nao funciona para BoardSize posicoes*/
-placeStone(GameState, Player, X, Y, NewGameState, BoardSize) :-
+placeStone(GameState, Player, X, Y, NewGameState) :-
     legalStonePlacement(GameState, X, Y, Player), !,
-    boardSize(BoardSize),
     X2 is X-1,
     Y2 is Y-1,
-    L is BoardSize-X,
-    K is BoardSize-Y,
-    list_nth(GameState, Y2, Row),
-    list_slice(Row, 0, X2, Part1), !,
-    list_slice(Row, X, L, Part2), !,
-    append(Part1, [Player], L1), !,
-    append(L1, Part2, NewRow), !,
-    list_slice(GameState, 0, Y2, Part3), !,
-    list_slice(GameState, Y, K, Part4), !,
-    append(Part3, [NewRow], L2), !,
-    append(L2, Part4, NewGameState), !.
+    list_nth(GameState, Y2, Row), !,
+    replace(Row, X2, ' ', Player, NewRow), !,
+    replace(GameState, Y2, Row, NewRow, NewGameState), !.
 
 
 /* getListOfMoves = recebe o GameState e jogador. Passa por todas as células do jogo e verifica se é uma coordenada válida para inserir uma nova peça (usa legalStonePlacement para a verificação). Junta todos os Moves em ListOfMoves (um Move tem a estrutura [Player, X, Y])*/

@@ -7,8 +7,7 @@ move(GameState, Move, NewGameState) :-
     list_nth(Move, 0, Player),
     list_nth(Move, 1, X),
     list_nth(Move, 2, Y),
-    boardSize(BoardSize),
-    placeStone(GameState, Player, X, Y, NewGameState, BoardSize).
+    placeStone(GameState, Player, X, Y, NewGameState).
 
 
 display_game(GameState) :-
@@ -16,7 +15,7 @@ display_game(GameState) :-
     Size is 3*BoardSize+BoardSize-1,
     write(' '),
     writeCharNTimes(Size, '_'), nl,
-    drawBoard(GameState).
+    drawBoard(GameState), !.
 
 
 initial_state(Size, GameState) :-
@@ -50,85 +49,14 @@ game_over(GameState, Winner) :-
     Winner \= ' ',
     Winner \= " ".
     
-
-
-
-
-
-
-
-
-
-/* se quiser a Row, Column = 0, se quiser Column, Row = 0 */
-sanitizeInput(Column, Row, Place) :-
-    boardSize(BoardSize),
-(   (
-        number(Column),
-        format('What row (Y axis) do you want to place the piece (1..~w)? ', [BoardSize])
-    );
-    (   number(Row),
-        format('What column (X axis) do you want to place the piece (1..~w)? ', [BoardSize])
-    )
-),
-    read(Choice),
-
-(   
-    (\+number(Choice),
-    nl, write('Mmmmm... That wasn\'t what I was looking for. Let\'s try again'), nl,
-    sanitizeInput(Column, Row, Place)) ;
-
-
-    (number(Choice),
-        (
-            (Choice > 0,
-            Choice =< BoardSize,
-            Place is Choice) ;
-
-            (Choice =< 0,
-            nl, write('Try a little bit higher. '),
-            sanitizeInput(Column, Row, Place)) ;
-
-            (Choice > BoardSize,
-            nl, write('That number is out of bonds. '),
-            sanitizeInput(Column, Row, Place))
-
-        )
-    )
-).
-
-
-getMoveInput(Move, Turn) :-
-
-    nl, format('Player ~w it is your turn!', [Turn]), nl,
-    sanitizeInput(_, 0, X), !,
-    sanitizeInput(0, _, Y), !,
-
-(
-    (   Turn = 2,
-        append([], ['o'], L3),
-        append(L3, [X], L4),
-        append(L4, [Y], Move)
-    ) ;
-
-    (   Turn = 1,
-        append([], ['x'], L1),
-        append(L1, [X], L2),
-        append(L2, [Y], Move)
-    )
-).
-
-
-
     
 
-
 /* Turn = 1 ou 2 */
-/* TODO é preciso ainda recuperar de uma jogada que nao e legal */
+
 personVsPerson(GameState, Turn) :-
     \+game_over(GameState, _),
     display_game(GameState),
-    getMoveInput(Move, Turn),
-    move(GameState, Move, NewGameState),
+    getLegalMove(GameState, NewGameState, Turn),
     (
         (Turn = 1,
         personVsPerson(NewGameState, 2));
@@ -149,6 +77,7 @@ personVsPerson(GameState, Turn) :-
 
 /* TODO
 
+initial_state(9, G), personVsPerson(G, 1).
 
 value(+GameState, +Player, -Value).
 
