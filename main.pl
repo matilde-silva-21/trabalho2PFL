@@ -31,18 +31,6 @@ valid_moves(GameState, Player, ListOfMoves) :-
     getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves).
 
 
-
-play:-
-    write('\n\n----Center Game---\n\n'),
-    write('1. Player vs Player\n'),
-    write('2. Player vs Computer\n'),
-    write('3. Computer vs Computer\n'),
-    write('0. Leave Game\n'),
-    read(Choice),
-    menuChoice(Choice).
-
-
-
 game_over(GameState, Winner) :-
     boardSize(BoardSize),
     D is div(BoardSize, 2),
@@ -59,6 +47,20 @@ value(GameState, Player, Value) :-
     howManyFriendsInSight(GameState, Player, Middle, Middle, Answer),
     distanceFromPerimeter(Middle, Middle, Distance),
     Value is Distance-Answer.
+
+/* TODO nivel 2*/
+choose_move(GameState, Player, Level, Move) :-
+    Level = 1,
+    getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves),
+    length(ListOfMoves, Size),
+    random(0,Size,Random),
+    list_nth(ListOfMoves, Random, Move).
+
+
+
+
+
+
 
 
 /* Turn = 1 ou 2 */
@@ -86,17 +88,54 @@ personVsPerson(GameState, Turn) :-
     nl, write('Congratulations, Player 2, you won!').
 
 
-choose_move(GameState, Player, Level, Move) :-
-    Level = 1,
-    getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves),
-    length(ListOfMoves, Size),
-    random(0,Size,Random),
-    list_nth(ListOfMoves, Random, Move).
+personVsComputer(GameState, Turn, Level):-
+    
+    \+game_over(GameState, _),
+    display_game(GameState),
+    (
+        (Turn = 1) ;
+
+        (Turn = 2,
+        choose_move(GameState, 'o', Level, Move),
+        move(GameState, Move, NewGameState),
+        list_nth(Move, 1, X),
+        list_nth(Move, 2, Y),
+        nl, format('The computer placed a piece on column number ~w and row number ~w!', [X, Y]),nl) 
+    ),
+
+    (
+        (Turn = 1,
+        getLegalMove(GameState, NewGameState, Turn),
+        personVsComputer(NewGameState, 2, Level)) ;
+
+        (Turn = 2,
+        personVsComputer(NewGameState, 1, Level))
+    );
+
+    game_over(GameState, Winner),
+    display_game(GameState),
+    (Winner = 'x' ; Winner = "x"),
+    nl, write('Congratulations, you won!') ;
+
+    game_over(GameState, Winner),
+    display_game(GameState),
+    (Winner = 'o' ; Winner = "o"),
+    nl, write('Sorry, the computer won :(').
 
 
 
+play:-
+    write('\n\n----Center Game---\n\n'),
+    write('1. Player vs Player\n'),
+    write('2. Player vs Computer\n'),
+    write('3. Computer vs Computer\n'),
+    write('0. Leave Game\n'),
+    read(Choice),
+    menuChoice(Choice).
 
-/* TODO
+
+
+/*
 
 initial_state(9, G), personVsPerson(G, 1).
 
@@ -114,9 +153,7 @@ __P1__|__P2__
 
 choose_move(+GameState, +Player, +Level, -Move).
 
-O nível 1 deverá devolver uma jogada válida aleatória. O nível 2 deverá
-devolver a melhor jogada no momento (algoritmo greedy), tendo em conta a avaliação
-do estado de jogo.
+O nível 2 deverá devolver a melhor jogada no momento (algoritmo greedy), tendo em conta a avaliação do estado de jogo.
 
 */
 
