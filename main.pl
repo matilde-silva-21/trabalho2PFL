@@ -50,7 +50,15 @@ game_over(GameState, Winner) :-
     Winner \= ' ',
     Winner \= " ".
     
-    
+/* Value = o número de amigos que nos faltam ver (do ponto de vista do centro), para poder vencer o jogo */
+
+value(GameState, Player, Value) :-
+    boardSize(BoardSize),
+    Middle is div(BoardSize, 2)+1,
+    howManyFriendsInSight(GameState, Player, Middle, Middle, Answer),
+    distanceFromPerimeter(Middle, Middle, Distance),
+    Value is Distance-Answer.
+
 
 /* Turn = 1 ou 2 */
 
@@ -67,10 +75,12 @@ personVsPerson(GameState, Turn) :-
     );
 
     game_over(GameState, Winner),
+    display_game(GameState),
     (Winner = 'x' ; Winner = "x"),
     nl, write('Congratulations, Player 1, you won!') ;
 
     game_over(GameState, Winner),
+    display_game(GameState),
     (Winner = 'o' ; Winner = "o"),
     nl, write('Congratulations, Player 2, you won!').
 
@@ -80,6 +90,8 @@ personVsPerson(GameState, Turn) :-
 
 initial_state(9, G), personVsPerson(G, 1).
 
+
+__P1__|__P2__
 (5,1) | (1,3)
 (5,8) | (9,3)
 (5,3) | (5,7)
@@ -87,8 +99,6 @@ initial_state(9, G), personVsPerson(G, 1).
 (2,8) | (7,7)
 (7,3) | (3,5)
 (3,3) | (5,5)
-
-value(+GameState, +Player, -Value).
 
 -- computador --
 

@@ -63,14 +63,14 @@ drawBoard([Row|GameState], Count) :-
 
 drawBoard([], _).
 
-/*--- drawBoard = recebe o tamanho do tabuleiro e povoa GameState ---*/
+/*--- getGameState = recebe o tamanho do tabuleiro e povoa GameState ---*/
 
 getGameState(Size, GameState, Aux, Counter) :-
     Counter > 0,
     replicate(Size, ' ', L1),
     append(Aux, [L1], L2),
     New is Counter-1,
-    getGameState(Size, GameState, L2, New).
+    getGameState(Size, GameState, L2, New), !.
 
 getGameState(_, Aux, Aux, 0).
 
