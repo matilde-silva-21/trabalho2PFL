@@ -19,16 +19,7 @@ getListOfMoves(GameState, Player, X, Y, Aux, ListOfMoves) :-
 
 [[' ', ' ', ' '],[' ', ' ', ' '],[' ', ' ', ' ']]
 
-getListOfMoves([
-    [' ', ' ', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', 'o', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' '],
-    [' ', ' ', 'o', ' ', 'o', ' ', 'x', ' ', ' '],
-    [' ', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', 'x', ' ', ' ', ' ', ' ', ' '],
-    ['x', ' ', 'o', ' ', ' ', ' ', ' ', ' ', ' ']], 'x', 1, 1, [], ListOfMoves).
+move([[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']], ['x', 9, 3], G).
 
 getListOfMoves([[' ', ' ', ' '],[' ', ' ', ' '],[' ', ' ', ' ']], 'x', 1,1,[],L).
 
@@ -289,6 +280,7 @@ legalStonePlacement(GameState, X, Y, Player) :-
 
 /* placeStone = recebe o GameState, coordenadas (X, Y € [1,9]) e jogador. Primeiro, verifica se a o local de jogada é válido, se for, unifica NewGameState com o tabuleiro atualizado (com a peça nas coordenadas pretendidas) */
 
+/* TODO isto nao funciona para BoardSize posicoes*/
 placeStone(GameState, Player, X, Y, NewGameState, BoardSize) :-
     legalStonePlacement(GameState, X, Y, Player), !,
     boardSize(BoardSize),
