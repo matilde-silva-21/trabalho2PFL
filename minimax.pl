@@ -1,28 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
 minimax(GameState, Move, Val, Player)  :-
     getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves), !,
     best(ListOfMoves, Move, Val, GameState, Player).
@@ -44,5 +20,5 @@ betterof(Move0, Val0, _, Val1, Move0, Val0) :-        % Move0 better than Move1 
 
 betterof(_, _, Move1, Val1, Move1, Val1).           % Otherwise Move1 better than Move0
 
-*/
+
 
