@@ -48,6 +48,7 @@ value(GameState, Player, Value) :-
     distanceFromPerimeter(Middle, Middle, Distance),
     Value is Distance-Answer.
 
+
 /* TODO nivel 2*/
 choose_move(GameState, Player, Level, Move) :-
     Level = 1,
