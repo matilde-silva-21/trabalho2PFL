@@ -1,6 +1,7 @@
 :-[logic].
 :-[board].
 :-[menu].
+:-[minimax].
 :-use_module(library(random)).
 
 /* Move = [Player, X, Y] */
@@ -39,7 +40,8 @@ game_over(GameState, Winner) :-
     Winner \= ' ',
     Winner \= " ".
     
-/* Value = o número de amigos que nos faltam ver (do ponto de vista do centro), para poder vencer o jogo */
+
+/* Value = o número de amigos que nos faltam ver (do ponto de vista do centro), para poder vencer o jogo. Quanto mais pequeno o valor melhor */
 
 value(GameState, Player, Value) :-
     boardSize(BoardSize),
@@ -49,15 +51,15 @@ value(GameState, Player, Value) :-
     Value is Distance-Answer.
 
 
-/* TODO nivel 2*/
 choose_move(GameState, Player, Level, Move) :-
     Level = 1,
     getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves),
     length(ListOfMoves, Size),
     random(0,Size,Random),
-    list_nth(ListOfMoves, Random, Move).
+    list_nth(ListOfMoves, Random, Move) ;
 
-
+    Level = 2,
+    chooseBestMove(GameState, Player, Move).
 
 
 
@@ -138,9 +140,9 @@ play:-
 
 /*
 
-initial_state(9, G), personVsPerson(G, 1).
+initial_state(5, G), personVsPerson(G, 1).
 
-
+initial_state(5, G), chooseBestMove(G, 'x', BestMove).
 __P1__|__P2__
 (5,1) | (1,3)
 (5,8) | (9,3)

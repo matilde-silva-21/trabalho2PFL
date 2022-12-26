@@ -71,6 +71,10 @@ list_nth([_|L1], Index, Elem) :-
     NewIndex is Index-1,
     list_nth(L1, NewIndex, Elem).
 
+/* -------- */
+
+clone([],[]).
+clone([H|T],[H|Z]):- clone(T,Z).
 
 /* -------- */
 
