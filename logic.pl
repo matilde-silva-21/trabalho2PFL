@@ -73,6 +73,18 @@ list_nth([_|L1], Index, Elem) :-
 
 /* -------- */
 
+count(_, [], 0).
+count(Elem, [H|T], R) :-
+    (Elem = H,
+    count(Elem, T, N),
+    R is 1+N)
+    ; 
+    (Elem \= H,
+    count(Elem, T, N),
+    R is N).
+
+/* -------- */
+
 clone([],[]).
 clone([H|T],[H|Z]):- clone(T,Z).
 

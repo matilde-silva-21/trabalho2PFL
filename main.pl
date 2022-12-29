@@ -2,6 +2,7 @@
 :-[board].
 :-[menu].
 :-[minimax].
+:-[playing_mode].
 :-use_module(library(random)).
 
 /* Move = [Player, X, Y] */
@@ -62,77 +63,13 @@ choose_move(GameState, Player, Level, Move) :-
     chooseBestMove(GameState, Player, Move).
 
 
-
-
-
-
-/* Turn = 1 ou 2 */
-
-personVsPerson(GameState, Turn) :-
-    \+game_over(GameState, _),
-    display_game(GameState),
-    getLegalMove(GameState, NewGameState, Turn),
-    (
-        (Turn = 1,
-        personVsPerson(NewGameState, 2));
-
-        (Turn = 2,
-        personVsPerson(NewGameState, 1))
-    );
-
-    game_over(GameState, Winner),
-    display_game(GameState),
-    (Winner = 'x' ; Winner = "x"),
-    nl, write('Congratulations, Player 1, you won!') ;
-
-    game_over(GameState, Winner),
-    display_game(GameState),
-    (Winner = 'o' ; Winner = "o"),
-    nl, write('Congratulations, Player 2, you won!').
-
-
-personVsComputer(GameState, Turn, Level):-
-    
-    \+game_over(GameState, _),
-    display_game(GameState),
-    (
-        (Turn = 1) ;
-
-        (Turn = 2,
-        choose_move(GameState, 'o', Level, Move),
-        move(GameState, Move, NewGameState),
-        list_nth(Move, 1, X),
-        list_nth(Move, 2, Y),
-        nl, format('The computer placed a piece on column number ~w and row number ~w!', [X, Y]),nl) 
-    ),
-
-    (
-        (Turn = 1,
-        getLegalMove(GameState, NewGameState, Turn),
-        personVsComputer(NewGameState, 2, Level)) ;
-
-        (Turn = 2,
-        personVsComputer(NewGameState, 1, Level))
-    );
-
-    game_over(GameState, Winner),
-    display_game(GameState),
-    (Winner = 'x' ; Winner = "x"),
-    nl, write('Congratulations, you won!') ;
-
-    game_over(GameState, Winner),
-    display_game(GameState),
-    (Winner = 'o' ; Winner = "o"),
-    nl, write('Sorry, the computer won :(').
-
-
-
 play:-
-    write('\n\n----Center Game---\n\n'),
-    write('1. Player vs Player\n'),
-    write('2. Player vs Computer\n'),
-    write('3. Computer vs Computer\n'),
-    write('0. Leave Game\n'),
+    writeGameBanner,
+    write('Please choose one of the playing modes:\n'),
+    write('     1. Player vs Player\n'),
+    write('     2. Player vs Computer\n'),
+    write('     3. Computer vs Computer\n'),
+    write('     0. Leave Game\n'),
     read(Choice),
     menuChoice(Choice).
 
@@ -141,6 +78,8 @@ play:-
 /*
 
 initial_state(5, G), personVsPerson(G, 1).
+
+initial_state(7, GameState), computerVsComputer(GameState, 1, 1).
 
 initial_state(5, G), chooseBestMove(G, 'x', BestMove).
 __P1__|__P2__

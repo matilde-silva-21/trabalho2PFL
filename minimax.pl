@@ -61,6 +61,17 @@ minimax([Move|[]], ListOfScores, _, Move) :-
 
 chooseBestMove(GameState, Player, BestMove):-
     getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves),
+    boardSize(BoardSize),
+    D is div(BoardSize, 2)+1,
+    append([], [Player], L1),
+    append(L1, [D], L2),
+    append(L2, [D], Move),
+    count(Move, ListOfMoves, N),
+
+    ((N > 0,
+    clone(Move, BestMove)) ;
+
+    (N = 0,
     getListOfScores(GameState, ListOfMoves, ListOfScores),
     length(ListOfScores, L),
     (
@@ -77,5 +88,5 @@ chooseBestMove(GameState, Player, BestMove):-
 
         \+divisible(Levels, 2),
         minimax(ListOfMoves, ListOfScores, 1, BestMove), !
-    ).
+    ))).
 
