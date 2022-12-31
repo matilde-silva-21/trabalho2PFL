@@ -128,11 +128,17 @@ personVsComputer(GameState, Turn, Level):-
 
 
 play:-
-    write('\n\n----Center Game---\n\n'),
-    write('1. Player vs Player\n'),
-    write('2. Player vs Computer\n'),
-    write('3. Computer vs Computer\n'),
-    write('0. Leave Game\n'),
+    write('\n\n'),
+    write('**************** Main Meanu ****************\n'),
+    write('*                                          *\n'),
+    write('         OPTION           ACTION           *\n'),
+    write('*                                          *\n'),
+    write('*           1.        Player vs Player     *\n'),
+    write('*           2.       Player vs Computer    *\n'),
+    write('*           3.      Computer vs Computer   *\n'),
+    write('*           0.            Leave Game       *\n'),
+    write('*                                          *\n'),
+    write('********************************************\n'),
     read(Choice),
     menuChoice(Choice).
 
