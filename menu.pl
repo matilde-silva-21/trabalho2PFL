@@ -1,12 +1,12 @@
 /* writeGameBanner = formata o nome do jogo para ficar com uma aparência bonita */
 
 writeGameBanner:-
-    write('   ____           _            '),nl,
-    write('  / ___|___ _ __ | |_ ___ _ __ '),nl,
-    write(' | |   / _ \\ \'_ \\| __/ _ \\ \'__|'),nl,
-    write(' | |__|  __/ | | | ||  __/ |   '),nl,
-    write('  \\____\\___|_| |_|\\__\\___|_|   '),nl,
-    write('                               '), nl.
+    write('         ____           _            '),nl,
+    write('        / ___|___ _ __ | |_ ___ _ __ '),nl,
+    write('       | |   / _ \\ \'_ \\| __/ _ \\ \'__|'),nl,
+    write('       | |__|  __/ | | | ||  __/ |   '),nl,
+    write('        \\____\\___|_| |_|\\__\\___|_|   '),nl,
+    write('                                     ').
                                
                                
 % Game Main Menu

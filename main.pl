@@ -65,11 +65,17 @@ choose_move(GameState, Player, Level, Move) :-
 
 play:-
     writeGameBanner,
-    write('Please choose one of the playing modes:\n'),
-    write('     1. Player vs Player\n'),
-    write('     2. Player vs Computer\n'),
-    write('     3. Computer vs Computer\n'),
-    write('     0. Leave Game\n'),
+    write('\n\n'),
+    write('**************** Main Menu ****************\n'),
+    write('*                                          *\n'),
+    write('         OPTION           ACTION           *\n'),
+    write('*                                          *\n'),
+    write('*           1.        Player vs Player     *\n'),
+    write('*           2.       Player vs Computer    *\n'),
+    write('*           3.      Computer vs Computer   *\n'),
+    write('*           0.            Leave Game       *\n'),
+    write('*                                          *\n'),
+    write('********************************************\n'),
     read(Choice),
     menuChoice(Choice).
 
@@ -77,11 +83,8 @@ play:-
 
 /*
 
-initial_state(5, G), personVsPerson(G, 1).
+PvP example match:
 
-initial_state(7, GameState), computerVsComputer(GameState, 1, 1).
-
-initial_state(5, G), chooseBestMove(G, 'x', BestMove).
 __P1__|__P2__
 (5,1) | (1,3)
 (5,8) | (9,3)
@@ -91,11 +94,4 @@ __P1__|__P2__
 (7,3) | (3,5)
 (3,3) | (5,5)
 
--- computador --
-
-choose_move(+GameState, +Player, +Level, -Move).
-
-O nível 2 deverá devolver a melhor jogada no momento (algoritmo greedy), tendo em conta a avaliação do estado de jogo.
-
 */
-
