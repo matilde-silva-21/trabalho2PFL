@@ -80,7 +80,7 @@ O estado do jogo é composto por:
 ```
 ![img](images/final_state.png)
 
-### Visualização do Estado do jogo
+### Visualização do estado do jogo
 `TO-DO`
 
 ### Processo de execução de uma jogada
@@ -100,8 +100,8 @@ game_over(GameState, Winner) :-
 ```
 
 ### Lista das jogadas válidas
-A lista de jogadas válidas está implementada no predicado ``getListOfMoves`.  Esta recebe o estado do jogo (GameState) e o atual jogador. Verifica que coordenadas são válidas para a inserção de uma nova peça percorrendo todas as células do tabuleiro. Para a verificação da validade das jogadas usa o predicado `legalStonePlacement`. 
-No fim de percorrer, junta todas as possíveis jogadas em `ListOfMoves` (uma jogada tem a estrutura [Player, X, Y]).
+A lista de jogadas válidas está implementada no predicado `valid_moves`. Este chama `getListOfMoves` que recebe o estado do jogo (GameState) e o atual jogador. Verifica que coordenadas são válidas para a inserção de uma nova peça percorrendo todas as células do tabuleiro. Para a verificação da validade das jogadas usa o predicado `legalStonePlacement`. 
+No fim de percorrer, `getListOfMoves` junta todas as possíveis jogadas em `ListOfMoves` (uma jogada tem a estrutura [Player, X, Y]) e manda para `valid_moves`. Abaixo o código:
 
 
 ```prolog
@@ -165,6 +165,11 @@ getListOfMoves(_, _, X, Y, Aux, Aux) :-
     K is BoardSize+1,
     X = 1,
     Y = K.
+ ```
+
+ ```prolog
+ valid_moves(GameState, Player, ListOfMoves) :-
+    getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves).
  ```
 
 ### Avaliação do estado do jogo
