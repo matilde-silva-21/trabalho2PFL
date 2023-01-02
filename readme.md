@@ -332,11 +332,11 @@ evaluateInTwos([M1, M2 | ListOfMoves], [S1, S2 | ListOfScores], [MoveOption | Re
 Consideramos que conseguimos implementar com sucesso o jogo _Center_ usando a línguagem _Prolog 4.7._
 
 ### Dificuldades
-??
+- Implementação do algoritmo minimax, um algoritmo direcionado a árvores binárias, que teve de ser adaptado para funcionar com listas.
 
 ### Melhorias
 - Implementação do _alpha beta pruning_ no minimax;
-- Verificação a várias profundidades de jogo.
+- Verificação da jogada a várias profundidades de jogo.
 
 
 ## Fontes
