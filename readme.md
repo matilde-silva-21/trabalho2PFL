@@ -279,7 +279,15 @@ As jogadas do computador têm dois níveis:
 
 
 ## Conclusão
-### `TO-DO`
+Consideramos que conseguimos implementar com sucesso o jogo _Center_ usando a línguagem _Prolog 4.7._
+
+### Dificuldades
+??
+
+### Melhorias
+- Implementação do _alpha beta pruning_ no minimax;
+- Verificação a várias profundidades de jogo.
+
 
 ## Fontes
 - https://boardgamegeek.com/boardgame/360905/center
