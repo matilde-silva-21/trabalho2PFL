@@ -11,9 +11,9 @@ O jogo realizado pelo nosso grupo no 2º trabalho prático no âmbito da unidade
 ### 🐧 Execução do jogo em Linux 
 Para a correta execução do programa é necesário ter o SICStus 4.7.1 ou uma versão mais recente.
 
-Para correr o programa, é então necessário consultar o ficheiro `main.pl`. Isto pode-se fazer na linha de comandos:
+Para correr o programa, é então necessário importar o ficheiro `main.pl`. Isto pode-se fazer na linha de comandos:
 ```
-  ?- consult('./play.pl').
+  ?- [main].
   ```
   
 ### 🪟 Execução do jogo em Windows 
@@ -27,7 +27,7 @@ Os passos para efetuar a execução:
   
 ## Descrição do Jogo
 ### ♟️ Tabuleiro
-O tabuleiro do jogo pode ter formato hexagonal ou quadrangular. A lateral do tabuleiro hexagonal tanto pode ter número ímpar como par de casas. Já se se optar pelo tabuleiro quadrangular número de filas deve ser ímpar, de modo a que o tabuleiro tenha centro. Por questões de simplicidade, optamos pelo tabuleiro 
+O tabuleiro do jogo pode ter formato hexagonal ou quadrangular. A lateral do tabuleiro hexagonal tanto pode ter número ímpar como par de casas. Já se se optar pelo tabuleiro quadrangular número de filas deve ser ímpar, de modo a que o tabuleiro tenha centro. Por questões de simplicidade, optamos pelo tabuleiro quadrangular.
 ### 🎯 Gameplay
 Os jogadores podem jogar com as peças pretas ou com as brancas.
 Para efetuar uma jogada é necessário:
@@ -41,8 +41,7 @@ Para efetuar uma jogada é necessário:
 O estado do jogo é composto por:
 - o estado atual do tabuleiro:
   - este é representado por uma **lista de listas** em que cada lista representa uma linha no tabuleiro e cada posição da lista representa um quadrado do tabuleiro. Cada quadrado do tabuleiro não tem diferença em cor, visto que não tem relevância para o jogo.
-- a cor do jogador atual:
-  - é definida pelo uso dos caracteres `x` e `o`, sendo `x` o `Player 1`, podendo ser considerada a peça branca, e `o` o `Player 2`, a peça preta.
+- cada jogador é definido pelo uso dos caracteres `x` e `o`, sendo `x` o `Player 1`, podendo ser considerada a peça branca, e `o` o `Player 2`, a peça preta.
 
 ### Estado Inicial (5x5)
 ```
@@ -82,7 +81,9 @@ O estado do jogo é composto por:
 
 ### Visualização do estado do jogo
 Após o ínicio do jogo, correndo o predicado `play.` é apresentado ao jogador um menu com as seguintes opções:
+
 ![img](images/menu.png)
+
 Para escolher uma opção, tudo o que o jogador tem de fazer é escrever o número relativo à opção seguido de um ponto final e premir `Enter`.
 As opções `1`, `2` e `3` correspoondem ao modos de jogo disponíveis:
 ```
@@ -107,7 +108,7 @@ Após a escolha do tamanho do tabuleiro, escolhe-se o modo de jogo dos dois comp
   - Nível 1: ambos os computadores escolhem uma jogada aleaória;
   - Nível 2: ambos os computadores escolhem a melhor jogada.
 
-Ao iniciar umm jogo, é apresentado um tabuleiro, com a medida escolhida. E conforme seja a vez do jogador ou do computador, apresenta um diálogo a pedir input do jogador ou um diálogo com a jogada efetuada pelo computador.
+Ao iniciar um jogo, é apresentado um tabuleiro, com a medida escolhida. E conforme seja a vez do jogador ou do computador, apresenta um diálogo a pedir input do jogador ou um diálogo com a jogada efetuada pelo computador.
 
 ### Processo de execução de uma jogada
 `TO-DO`
