@@ -4,8 +4,8 @@ O jogo realizado pelo nosso grupo no 2º trabalho prático no âmbito da unidade
 
 - Grupo: Center_5
 - Participantes: 
-  - up202004656 - Mariana Solange Mariana Rocha (contribuição: 50%)
-  - up202007928 - Matilde Maria Amaral Silva    (contribuição: 50%)
+  - up202004656 - Mariana Solange Mariana Rocha (contribuição: 40%)
+  - up202007928 - Matilde Maria Amaral Silva    (contribuição: 60%)
   
 ## Instalação e Execução
 ### 🐧 Execução do jogo em Linux 
