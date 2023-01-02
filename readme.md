@@ -233,7 +233,7 @@ getListOfMoves(_, _, X, Y, Aux, Aux) :-
  ```
 
 ### Avaliação do tabuleiro
-A estratégia utilizada para avaliar o estado do tabuleiro foi implementada pelo predicado `value(+GameState, +Player, -Value)` que retorna o número de peças do mesmo tipo que ainda  faltam estar à vista do jogador para que este possa vencer o jogo. Quanto mais pequeno o valor deste, mais próximo estará o jogador de uma possível vitória.
+A estratégia utilizada para avaliar o estado do tabuleiro foi implementada pelo predicado `value(+GameState, +Player, -Value)` que retorna o número de peças de `Player` que ainda faltam estar à vista do centro para que este possa vencer o jogo. Quanto mais pequeno o valor deste, mais próximo estará o jogador de uma possível vitória.
 
 ```prolog
 value(GameState, Player, Value) :-
@@ -275,8 +275,58 @@ howManyFriendsInSight(GameState, Player, X, Y, Answer) :-
 ### Jogadas do Computador
 As jogadas do computador têm dois níveis:
   - Nível 1: O predicado `choose_move` recebe `valid_moves` (todas as jogadas válidas num certo estado de jogo)  e, neste caso, escolhe, aleatoriamente, um número entre 0 e o tamanho de `valid_moves`-1 (ou seja, um índice dentro da lista de todas as jogadas válidas). A jogada é escolhida então de acordo então com o índice gerado aleatoriamente.
-  - Nível 2: O predicado `choose_move` recebe `valid_moves` e neste é usado o seguinte algoritmo: pega-se em duas das jogadas possíveis de cada vez e compara-se-as até restar apenas uma jogada (a melhor jogada). Na primeira comparação, verifica-se qual é o mais pequeno. Na segunda, verifica-se qual é o maior. E na terceira, escolhe-se o menor dos dois.
 
+  - Nível 2: O predicado `choose_move` recebe `valid_moves` e, neste caso, é usado o algoritmo minimax. O mesmo foi implementado do seguinte modo: para simular as folhas de uma árvore binária, selecionam-se duas das jogadas possíveis de cada vez (2 elementos de `ListOfMoves`), é comparado o `Value` das duas de acordo com o argumento `Criteria`, portanto só uma de duas jogadas é selecionada. Repete-se esta estratégia de seleção de pares, cortando, assim, a `ListOfMoves` a metade em cada iteração do algoritmo. Este processo continua até `ListOfMoves` ter apenas 1 elemento, que será unificado com `BestMove`.
+  De notar, `Criteria` varia entre cada iteração do algoritmo para que seja feita, alternadamente, uma comparação que valoriza o maior ou menor `Value`. Foi também imposta a restrição que a última comparação deve ser a escolher o mínimo `Value`.
+
+O predicado `minimax` implementado:
+
+```prolog
+minimax(ListOfMoves, ListOfScores, Criteria, BestMove) :-
+    ((Criteria = 0, NewCriteria is 1) ; (Criteria = 1, NewCriteria is 0)),
+    length(ListOfMoves, L),
+    L \= 1,
+    evaluateInTwos(ListOfMoves, ListOfScores, ReducedMoves, ReducedScores, Criteria),
+    minimax(ReducedMoves, ReducedScores, NewCriteria, BestMove).
+
+minimax([Move|[]], ListOfScores, _, Move) :-
+    length(ListOfScores, L),
+    L = 1.
+```
+
+O predicado `evaluateInTwos` que, como referido, avalia dois elementos de `ListOfMoves` de cada vez. Se `ListOfMoves` tiver um número ímpar de elementos então o último elemento não é comparado e é mantido na lista.
+
+```prolog
+evaluateInTwos([], [], [], [], _).
+
+evaluateInTwos([M|[]], [S|[]], [M|[]], [S|[]], _).
+
+evaluateInTwos([M1, M2 | ListOfMoves], [S1, S2 | ListOfScores], [MoveOption | ReducedMoves], [ScoreOption | ReducedScores], Criteria) :-
+    ((Criteria = 0,
+    (
+        S1 >= S2,
+        ScoreOption is S1,
+        clone(M1, MoveOption) ;
+
+        S2 > S1,
+        ScoreOption is S2,
+        clone(M2, MoveOption)
+    )) ;
+
+    (Criteria = 1,
+    (
+        S1 =< S2,
+        ScoreOption is S1,
+        clone(M1, MoveOption) ;
+
+        S2 < S1,
+        ScoreOption is S2,
+        clone(M2, MoveOption)
+    )
+    )),
+    evaluateInTwos(ListOfMoves, ListOfScores, ReducedMoves, ReducedScores, Criteria).
+
+```
 
 ## Conclusão
 ### `TO-DO`
