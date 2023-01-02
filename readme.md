@@ -89,7 +89,7 @@ O estado do jogo é composto por:
 ### Game Over
 A estratégia utilizada para verificar se o jogo chegou ao fim está implementada através do predicado `game_over` que verifica se alguma peça está no centro do tabuleiro, se estiver o jogo acabou e a cor dessa peça sai vencedora da partida.
 
-```
+```prolog
 game_over(GameState, Winner) :-
     boardSize(BoardSize),
     D is div(BoardSize, 2),
@@ -100,7 +100,72 @@ game_over(GameState, Winner) :-
 ```
 
 ### Lista das jogadas válidas
-`TO-DO`
+A lista de jogadas válidas está implementada no predicado ``getListOfMoves`.  Esta recebe o estado do jogo (GameState) e o atual jogador. Verifica que coordenadas são válidas para a inserção de uma nova peça percorrendo todas as células do tabuleiro. Para a verificação da validade das jogadas usa o predicado `legalStonePlacement`. 
+No fim de percorrer, junta todas as possíveis jogadas em `ListOfMoves` (uma jogada tem a estrutura [Player, X, Y]).
+
+
+```prolog
+legalStonePlacement(GameState, X, Y, Player) :-
+    X2 is X-1,
+    Y2 is Y-1,
+    list_nth(GameState, Y2, Row),
+    list_nth(Row, X2, Elem),
+    (Elem = ' ' ; Elem = " "),
+    howManyFriendsInSight(GameState, Player, X, Y, Friends),
+    distanceFromPerimeter(X, Y, Distance),
+    Distance =< Friends.
+ ```
+
+ ```prolog 
+getListOfMoves(GameState, Player, X, Y, Aux, ListOfMoves) :-
+    
+    boardSize(BoardSize),
+    X = BoardSize,
+    Y =< BoardSize,
+    A is 1,
+    B is Y+1,
+    legalStonePlacement(GameState, X, Y, Player),
+    append([], [Player], L1),
+    append(L1, [X], L2),
+    append(L2, [Y], Move),
+    append(Aux, [Move], L3),
+    getListOfMoves(GameState, Player, A, B, L3, ListOfMoves) ;
+
+    boardSize(BoardSize),
+    Y =< BoardSize,
+    X \= BoardSize,
+    A is X+1,
+    B is Y,
+    legalStonePlacement(GameState, X, Y, Player), !,
+    append([], [Player], L1),
+    append(L1, [X], L2),
+    append(L2, [Y], Move),
+    append(Aux, [Move], L3),
+    getListOfMoves(GameState, Player, A, B, L3, ListOfMoves), ! ;
+    
+    
+    boardSize(BoardSize),
+    Y =< BoardSize,
+    X \= BoardSize,
+    A is X+1,
+    B is Y,
+    \+ legalStonePlacement(GameState, X, Y, Player), !,
+    getListOfMoves(GameState, Player, A, B, Aux, ListOfMoves), ! ;
+
+    boardSize(BoardSize),
+    Y =< BoardSize,
+    X = BoardSize,
+    A is 1,
+    B is Y+1,
+    \+ legalStonePlacement(GameState, X, Y, Player), !,
+    getListOfMoves(GameState, Player, A, B, Aux, ListOfMoves), ! .
+
+getListOfMoves(_, _, X, Y, Aux, Aux) :-
+    boardSize(BoardSize),
+    K is BoardSize+1,
+    X = 1,
+    Y = K.
+ ```
 
 ### Avaliação do estado do jogo
 `TO-DO`
