@@ -136,7 +136,7 @@ initial_state(Size, GameState) :-
 O processo de execução de uma jogada é feita através dos predicados `move` e `valid_moves`.
 O predicado `valid_moves` recebe a lista das jogadas válidas de uma determinada posição para um determinado tipo de peça, e está explicado o seu funcionamento mais abaixo na secção "Lista das jogadas válidas".
 
-Já predicado `move` coloca a peça do jogador na posição definida em Move, guardando valores importantes como o do estado do novo tabuleiro, a posição onde foi inserida a peça no novo estado do tabuleiro e o próximo jogador a efetuar uma jogada.
+Já o predicado `move` coloca a peça do jogador na posição definida em Move, guardando valores importantes como o do estado do novo tabuleiro, a posição onde foi inserida a peça no novo estado do tabuleiro e o próximo jogador a efetuar uma jogada.
 
 ```prolog
 move(GameState, Move, NewGameState) :-
@@ -273,7 +273,10 @@ howManyFriendsInSight(GameState, Player, X, Y, Answer) :-
 ```
 
 ### Jogadas do Computador
-`TO-DO`
+As jogadas do computador têm dois níveis:
+  - Nível 1: O predicado `choose_move` recebe `valid_moves` (todas as jogadas válidas num certo estado de jogo)  e, neste caso, escolhe, aleatoriamente, um número entre 0 e o tamanho de `valid_moves`-1 (ou seja, um índice dentro da lista de todas as jogadas válidas). A jogada é escolhida então de acordo então com o índice gerado aleatoriamente.
+  - Nível 2: O predicado `choose_move` recebe `valid_moves` e neste é usado o seguinte algoritmo: pega-se em duas das jogadas possíveis de cada vez e compara-se-as até restar apenas uma jogada (a melhor jogada). Na primeira comparação, verifica-se qual é o mais pequeno. Na segunda, verifica-se qual é o maior. E na terceira, escolhe-se o menor dos dois.
+
 
 ## Conclusão
 ### `TO-DO`
