@@ -80,9 +80,13 @@ O estado do jogo é composto por:
 ```
 ![img](images/final_state.png)
 
+
 ### Visualização do estado do jogo
+
 Após o ínicio do jogo, correndo o predicado `play.` é apresentado ao jogador um menu com as seguintes opções:
+
 ![img](images/menu.png)
+
 Para escolher uma opção, tudo o que o jogador tem de fazer é escrever o número relativo à opção seguido de um ponto final e premir `Enter`.
 As opções `1`, `2` e `3` correspoondem ao modos de jogo disponíveis:
 ```
@@ -198,8 +202,45 @@ getListOfMoves(_, _, X, Y, Aux, Aux) :-
     getListOfMoves(GameState, Player, 1, 1, [], ListOfMoves).
  ```
 
-### Avaliação do estado do jogo
-`TO-DO`
+### Avaliação do tabuleiro
+A estratégia utilizada para avaliar o estado do tabuleiro foi implementada pelo predicado `value(+GameState, +Player, -Value)` que retorna o número de peças do mesmo tipo que ainda  faltam estar à vista do jogador para que este possa vencer o jogo. Quanto mais pequeno o valor deste, mais próximo estará o jogador de uma possível vitória.
+
+```prolog
+value(GameState, Player, Value) :-
+    boardSize(BoardSize),
+    Middle is div(BoardSize, 2)+1,
+    howManyFriendsInSight(GameState, Player, Middle, Middle, Answer),
+    distanceFromPerimeter(Middle, Middle, Distance),
+    Value is Distance-Answer.
+```
+O predicado `distanceFromPerimeter`, usado em `value`, calcula a distância mais curta desde as coordenadas dadas até ao perímetro do tabuleiro.
+
+```prolog
+distanceFromPerimeter(X, Y, Distance) :-
+    
+    getHorizontalDistance(X, HorizontalDistance),
+    getVerticalDistance(Y, VerticalDistance),
+    VerticalDistance =< HorizontalDistance,
+    Distance is VerticalDistance ;
+
+    getHorizontalDistance(X, HorizontalDistance),
+    getVerticalDistance(Y, VerticalDistance),
+    VerticalDistance > HorizontalDistance,
+    Distance is HorizontalDistance.
+``` 
+
+Já o predicado `howManyFriendsInSight`, também usado no predicado `value`, recebe o estado do tabuleiro e as coordenadas da posição e calcula os amigos que estão visíveis daí.
+```prolog
+howManyFriendsInSight(GameState, Player, X, Y, Answer) :-
+    Y2 is Y-1,
+    list_nth(GameState, Y2, Row),
+    X2 is X-1,
+    howManyFriendsInRow(Row, Player, X2, 0, 0, AnswerRow),
+    howManyFriendsInColumn(GameState, Player, X2, Y2, 0, 0, AnswerColumn),
+    howManyFriendsInLeftDiagonal(GameState, Player, X2, Y2, AnswerLeftDiagonal),
+    howManyFriendsInRightDiagonal(GameState, Player, X2, Y2, AnswerRightDiagonal),
+    Answer is (AnswerRow + AnswerColumn + AnswerLeftDiagonal + AnswerRightDiagonal).
+```
 
 ### Jogadas do Computador
 `TO-DO`
