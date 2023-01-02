@@ -42,7 +42,7 @@ O estado do jogo é composto por:
 - o estado atual do tabuleiro:
   - este é representado por uma **lista de listas** em que cada lista representa uma linha no tabuleiro e cada posição da lista representa um quadrado do tabuleiro. Cada quadrado do tabuleiro não tem diferença em cor, visto que não tem relevância para o jogo.
 - a cor do jogador atual:
-  - é definida pelo uso dos caracteres `x` e `o`, sendo `x` branco e `o` preto.
+  - é definida pelo uso dos caracteres `x` e `o`, sendo `x` o `Player 1`, podendo ser considerada a peça branca, e `o` o `Player 2`, a peça preta.
 
 ### Estado Inicial (5x5)
 ```
@@ -81,7 +81,33 @@ O estado do jogo é composto por:
 ![img](images/final_state.png)
 
 ### Visualização do estado do jogo
-`TO-DO`
+Após o ínicio do jogo, correndo o predicado `play.` é apresentado ao jogador um menu com as seguintes opções:
+![img](images/menu.png)
+Para escolher uma opção, tudo o que o jogador tem de fazer é escrever o número relativo à opção seguido de um ponto final e premir `Enter`.
+As opções `1`, `2` e `3` correspoondem ao modos de jogo disponíveis:
+```
+1 - Player vs Player
+2 - Player vs Computer
+3 - Computer vs Computer
+```
+Após a seleção de qualquer uma dessas três opções é apresentado um ecrã para escolher o tamanho do lado do tabuleiro, sendo este arbitrário e sem limite superior desde que seja um número ímpar. 
+Quanto maior o tamanho escolhido, mais tempo demorará o jogo.
+
+Para a opção `1 - Player vs Player`:
+Após a seleção do tamanho do tabuleiro, dá-se início ao jogo. O primeiro a jogar é o `Player 1`, seguido do `Player 2`, repetidamente, até ao fim do jogo.
+
+Já para a opção `2 - Player vs Computer`:
+Após a escolha do tamanho do tabuleiro, escolhe-se o nível de dificuldade do oponente:
+  - Nível 1: o computador escolhe uma jogada aleaória;
+  - Nível 2: o computador escolhe a melhor jogada.
+Novamente, o `Player 1` é quem joga a primeira jogada (sendo o `Player 1` o jogador, e o `Player 2` o computador), seguido do `Player 2`, mantendo-se este ciclo até ao término da partida.
+
+Na opção `3 - Computer vs Computer`:
+Após a escolha do tamanho do tabuleiro, escolhe-se o modo de jogo dos dois computadores:
+  - Nível 1: ambos os computadores escolhem uma jogada aleaória;
+  - Nível 2: ambos os computadores escolhem a melhor jogada.
+
+Ao iniciar umm jogo, é apresentado um tabuleiro, com a medida escolhida. E conforme seja a vez do jogador ou do computador, apresenta um diálogo a pedir input do jogador ou um diálogo com a jogada efetuada pelo computador.
 
 ### Processo de execução de uma jogada
 `TO-DO`
