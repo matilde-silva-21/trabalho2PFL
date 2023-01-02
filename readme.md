@@ -37,7 +37,76 @@ Para efetuar uma jogada é necessário:
 🏆 O vencedor é o primeiro jogador a conseguir colocar uma peça no centro do tabuleiro.
 
 ## Lógica do Jogo
-### `TO-DO`
+### Representação interna do estado do jogo
+O estado do jogo é composto por:
+- o estado atual do tabuleiro:
+  - este é representado por uma **lista de listas** em que cada lista representa uma linha no tabuleiro e cada posição da lista representa um quadrado do tabuleiro. Cada quadrado do tabuleiro não tem diferença em cor, visto que não tem relevância para o jogo.
+- a cor do jogador atual:
+  - é definida pelo uso dos caracteres `x` e `o`, sendo `x` branco e `o` preto.
+
+### Estado Inicial (5x5)
+```
+[
+    [' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ']
+] 
+```
+![img](images/initial_state.png)
+
+### Estado Intermédio (5x5)
+```
+[
+    ['x', 'o', 'o', ' ', ' '],
+    [' ', 'x', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ']
+] 
+```
+![img](images/intermediate_state.png)
+
+### Estado Final (5x5)
+```
+[
+    ['x', 'o', 'o', ' ', ' '],
+    [' ', 'x', 'o', ' ', ' '],
+    [' ', ' ', 'x', 'o', ' '],
+    [' ', 'x', ' ', ' ', ' '],
+    [' ', ' ', 'x', ' ', ' ']
+] 
+```
+![img](images/final_state.png)
+
+### Visualização do Estado do jogo
+`TO-DO`
+
+### Processo de execução de uma jogada
+`TO-DO`
+
+### Game Over
+A estratégia utilizada para verificar se o jogo chegou ao fim está implementada através do predicado `game_over` que verifica se alguma peça está no centro do tabuleiro, se estiver o jogo acabou e a cor dessa peça sai vencedora da partida.
+
+```
+game_over(GameState, Winner) :-
+    boardSize(BoardSize),
+    D is div(BoardSize, 2),
+    list_nth(GameState, D, Row),
+    list_nth(Row, D, Winner),
+    Winner \= ' ',
+    Winner \= " ".
+```
+
+### Lista das jogadas válidas
+`TO-DO`
+
+### Avaliação do estado do jogo
+`TO-DO`
+
+### Jogadas do Computador
+`TO-DO`
 
 ## Conclusão
 ### `TO-DO`
