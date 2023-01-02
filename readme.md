@@ -112,8 +112,39 @@ Após a escolha do tamanho do tabuleiro, escolhe-se o modo de jogo dos dois comp
 
 Ao iniciar um jogo, é apresentado um tabuleiro, com a medida escolhida. E conforme seja a vez do jogador ou do computador, apresenta um diálogo a pedir input do jogador ou um diálogo com a jogada efetuada pelo computador.
 
+A visualização do estado do jogo foi implementada fazendo uso do predicado `display_game(+GameState)`, que dá _display_ ao estado atual do tabuleiro, recorrendo também ao predicado `drawBoard`, que recebe o estado atual do tabuleiro e desenha todo o tabuleiro.
+
+```prolog
+display_game(GameState) :-
+    boardSize(BoardSize),
+    Size is 3*BoardSize+BoardSize-1,
+    nl, writeColumnNumbers(1), nl,
+    write(' '),
+    writeCharNTimes(Size, '_'), nl,
+    drawBoard(GameState, 1), !.
+```
+Também é feito uso do predicado `initial_state`, que ao receber o tamanho do tabuleiro devolve o estado inicial do jogo.
+```prolog
+initial_state(Size, GameState) :-
+    \+ divisible(Size, 2),
+    retractall(boardSize(_)),
+    assert(boardSize(Size)),
+    getGameState(Size, GameState, [], Size), !.
+```
+
 ### Processo de execução de uma jogada
-`TO-DO`
+O processo de execução de uma jogada é feita através dos predicados `move` e `valid_moves`.
+O predicado `valid_moves` recebe a lista das jogadas válidas de uma determinada posição para um determinado tipo de peça, e está explicado o seu funcionamento mais abaixo na secção "Lista das jogadas válidas".
+
+Já predicado `move` coloca a peça do jogador na posição definida em Move, guardando valores importantes como o do estado do novo tabuleiro, a posição onde foi inserida a peça no novo estado do tabuleiro e o próximo jogador a efetuar uma jogada.
+
+```prolog
+move(GameState, Move, NewGameState) :-
+    list_nth(Move, 0, Player),
+    list_nth(Move, 1, X),
+    list_nth(Move, 2, Y),
+    placeStone(GameState, Player, X, Y, NewGameState).
+```
 
 ### Game Over
 A estratégia utilizada para verificar se o jogo chegou ao fim está implementada através do predicado `game_over` que verifica se alguma peça está no centro do tabuleiro, se estiver o jogo acabou e a cor dessa peça sai vencedora da partida.
